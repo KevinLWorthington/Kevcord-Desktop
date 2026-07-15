@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kevcord</title>
+  <style>
+    :root {
+      --bg-0: #131110;
+      --bg-1: #1a1715;
+      --bg-3: #2a2521;
+      --border: #2e2925;
+      --text-1: #ece7e1;
+      --text-2: #a89f95;
+      --accent: #e08a3c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--bg-0);
+      color: var(--text-1);
+      font-family: system-ui, sans-serif;
+      font-size: 15px;
+    }
+    .card {
+      width: min(380px, calc(100vw - 40px));
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px 28px;
+    }
+    h1 { font-size: 26px; margin: 0 0 4px; }
+    h1::after {
+      content: "";
+      display: block;
+      width: 32px; height: 3px;
+      border-radius: 2px;
+      background: var(--accent);
+      margin-top: 10px;
+    }
+    p { color: var(--text-2); font-size: 13.5px; line-height: 1.5; }
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--text-2); margin: 16px 0 6px; }
+    input {
+      width: 100%;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-1);
+      font: inherit;
+      padding: 10px 12px;
+      outline: none;
+    }
+    input:focus { border-color: var(--accent); }
+    button {
+      width: 100%;
+      margin-top: 16px;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: #201406;
+      font: inherit;
+      font-weight: 700;
+      padding: 11px;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(1.08); }
+    .err { color: #d05f5f; font-size: 13px; min-height: 18px; margin: 8px 0 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Kevcord</h1>
+    <p>Enter your server's address. It's remembered, so you'll only do this once.</p>
+    <form id="f">
+      <label for="url">Server address</label>
+      <input id="url" placeholder="chat.example.com" autofocus autocomplete="off" spellcheck="false" />
+      <p class="err" id="err"></p>
+      <button type="submit">Connect</button>
+    </form>
+  </div>
+  <script>
+    const KEY = "kevcord:server";
+    const params = new URLSearchParams(location.search);
+    if (params.has("reset")) {
+      localStorage.removeItem(KEY);
+    } else {
+      const saved = localStorage.getItem(KEY);
+      if (saved) location.replace(saved);
+    }
+    document.getElementById("f").addEventListener("submit", (e) => {
+      e.preventDefault();
+      let value = document.getElementById("url").value.trim();
+      if (!value) return;
+      if (!/^https?:\/\//i.test(value)) value = "https://" + value;
+      try {
+        const url = new URL(value);
+        if (url.protocol !== "https:" && url.hostname !== "localhost" && !/^[\d.]+$/.test(url.hostname)) {
+          throw new Error("Use https for remote servers.");
+        }
+        localStorage.setItem(KEY, url.origin);
+        location.replace(url.origin);
+      } catch (err) {
+        document.getElementById("err").textContent =
+          err.message === "Use https for remote servers." ? err.message : "That doesn't look like a valid address.";
+      }
+    });
+  </script>
+</body>
+</html>
