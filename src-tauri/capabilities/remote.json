@@ -1,0 +1,10 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "remote-open-links",
+  "description": "Let the Kevcord web app (loaded from the user's own server) open external links in the system browser.",
+  "windows": ["main"],
+  "remote": {
+    "urls": ["https://*", "http://*"]
+  },
+  "permissions": ["opener:default"]
+}

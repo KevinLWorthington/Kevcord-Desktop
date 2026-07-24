@@ -38,6 +38,8 @@ fn main() {
             MacosLauncher::LaunchAgent,
             None,
         ))
+        // External links from the web app open in the system browser.
+        .plugin(tauri_plugin_opener::init())
         .setup(|app| {
             let open = MenuItem::with_id(app, "open", "Open Kevcord", true, None::<&str>)?;
             let autostart_on = app.autolaunch().is_enabled().unwrap_or(false);
