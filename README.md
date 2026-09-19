@@ -44,6 +44,4 @@ Notes:
 - Voice chat works in the webview; the OS prompts for microphone access on
   first use.
 - Mentions and DMs show native system notifications while the app is in the
-  background (version 1.0.2 and later). They are on by default; the bell in the
-  channel header turns them off. On Windows they appear once the app has been
-  installed with its installer, not when running the .exe from the build folder.
+  background (version 1.0.2 and later).
