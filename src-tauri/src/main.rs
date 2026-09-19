@@ -40,6 +40,9 @@ fn main() {
         ))
         // External links from the web app open in the system browser.
         .plugin(tauri_plugin_opener::init())
+        // Native notifications. Its script also swaps in a window.Notification
+        // that shows real Windows toasts, which the webview can't do on its own.
+        .plugin(tauri_plugin_notification::init())
         .setup(|app| {
             let open = MenuItem::with_id(app, "open", "Open Kevcord", true, None::<&str>)?;
             let autostart_on = app.autolaunch().is_enabled().unwrap_or(false);
